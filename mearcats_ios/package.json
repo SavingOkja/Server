@@ -1,10 +1,22 @@
 {
   "name": "mearcats",
   "version": "0.0.0",
+  "description": "",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SavingOkja/Server.git"
+  },
+  "author": "Deff Lee <saven7788@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SavingOkja/Server/issues"
+  },
+  "homepage":"",
   "dependencies": {
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
@@ -12,6 +24,10 @@
     "express": "~4.15.2",
     "jade": "~1.11.0",
     "morgan": "~1.8.1",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "~2.4.2",
+    "dotenv": "^4.0.0",
+    "joi": "^10.6.0",
+    "mysql2": "^1.4.2",
+    "sequelize": "^4.8.2"
   }
 }
