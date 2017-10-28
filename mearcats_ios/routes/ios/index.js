@@ -54,7 +54,7 @@ router.route('/member')
 router.route('/company')
 .get((req, res)=>{
 
-  pool.query('select name from saving_okja.company";',[  req.query.name ], function( err, rows ) {
+  pool.query('select name from saving_okja.company',[  req.query.name ], function( err, rows ) {
 
     if (err){
       console.log(err);
@@ -69,9 +69,9 @@ router.route('/company')
     res.status(200).json({
       result: true,
       msg: "company 들입니다.",
-      data: rows[0]
+      data: rows
     });
-  };
+  });
 });
 
 
