@@ -48,7 +48,23 @@ router.route('/member')
   });
 })
 .get((req, res)=>{
+  pool.query('select * from saving_okja.usr where id=?',[req.query.id], function( err, rows ) {
+    if (err){
+      console.log(err);
+      res.json({
+        result: false,
+        msg: "db 접속 에러",
+        qry: this.sql
+      });
+      return;
+    }
 
+    res.status(200).json({
+      result: true,
+      msg: "usr 정보 들입니다.",
+      data: rows
+    });
+  });
 });
 
 router.route('/company')
