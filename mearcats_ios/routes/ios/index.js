@@ -365,9 +365,11 @@ router.route('/matching')
         arr.push(rows["value_"+d]);
 
       console.log("arr",arr);
-      let newArr = arr.filter((item) => item === 0 );
-      console.log("newArr.length",newArr.length);
-      console.log("newArr",newArr);
+      let zeroArr = arr.filter((item) => item === 0 );
+      let oneArr = arr.length - zeroArr.length;
+	console.log("newArr.length", zeroArr.length);
+	console.log("array",oneArr);      
+
 
 
     });
