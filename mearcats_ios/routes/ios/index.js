@@ -81,8 +81,8 @@ router.route('/member/favorite')
       });
       return;
     }
-	
-	
+
+
     console.log(rows[0].favorite_list);
 
 	update(rows[0].favorite_list);
@@ -93,7 +93,7 @@ router.route('/member/favorite')
 	fv = JSON.parse(fv);
 	console.log(typeof fv);
     fv.push(req.body.company_id);
-	
+
 let ar = JSON.stringify(fv);
     pool.query('update saving_okja.usr set favorite_list = ? where id = ?;',[ ar, req.body.user_id ], function( err, results ) {
 
@@ -124,7 +124,38 @@ let ar = JSON.stringify(fv);
   };
 
 
+})
+.get((req, res)=>{
+
+  pool.query('select favorite_list from saving_okja.usr where id=?',[req.query.id], function( err, rows ) {
+
+    if (err){
+      console.log(err);
+      res.json({
+        result: false,
+        msg: "db 접속 에러",
+        qry: this.sql
+      });
+      return;
+    }
+
+    if(rows[0].length !== 0){
+      res.status(200).json({
+        result: true,
+        msg: "favorite_list 입니다.",
+        data: rows[0].favorite_list
+      });
+    }else{
+      res.status(200).json({
+        result: true,
+        msg: "favorite_list가 없습니다",
+      });
+    }
+
+  });
 });
+
+;
 
 router.route('/member/history')
 .post((req, res)=>{
