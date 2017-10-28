@@ -48,8 +48,6 @@ pool.getConnection(function(err, connection) {
     });
 });
 
-console.log("1");
-
 const ios = require('./ios');
 router.use('/ios', ios);
 
