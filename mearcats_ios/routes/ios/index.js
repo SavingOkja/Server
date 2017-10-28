@@ -4,9 +4,11 @@ const crypto = require('crypto');
 
 /* GET users listing. */
 
-router.route('/member')
+router.route('/star')
 .post((req, res)=>{
-  pool.query('update saving_okja.company set rate = ? where id = ?;',[ req.body.rate, req.body.id ], function( err, rows ) {
+
+	console.log(req.body.rate);
+  pool.query('update saving_okja.company set star = ? where id = ?;',[ req.body.rate, req.body.id ], function( err, rows ) {
 
     if (err){
       console.log(err);
@@ -21,12 +23,14 @@ router.route('/member')
     if(rows.affectedRows !== 0) {
       res.status(201).json({
         result: true,
-        msg: "안됬습니다.",
+        msg: "됬습니다.",
+	data:this.sql
       });
     }else{
       res.status(201).json({
         result: true,
-        msg: "됬습니다",
+        msg: "안됬습니다",
+	data:this.sql
       });
     }
   });
@@ -34,7 +38,7 @@ router.route('/member')
 })
 .get((req, res)=>{
 
-  pool.query('select star from saving_okja.company where id = ?;',[ req.body.id ], function( err, rows ) {
+  pool.query('select star from saving_okja.company where id = ?;',[ req.query.id ], function( err, rows ) {
     if (err){
       console.log(err);
       res.json({
@@ -50,7 +54,7 @@ router.route('/member')
     if(rows.length !== 0) {
       res.status(201).json({
         result: true,
-        msg: "id입니다",
+        msg: "star입니다",
         data: rows[0].star
       });
     }else{
