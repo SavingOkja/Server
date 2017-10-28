@@ -229,8 +229,8 @@ router.route('/member/favorite')
 
 router.route('/member/history')
 .put((req, res)=>{
-  pool.query('select history from saving_okja.usr where id = ?',[ req.body.id ], function( err, rows ) {
-
+  let CompanyName;
+  pool.query('select name from saving_okja.company where id = ?',[ req.body.company_id ], function( err, rows ) {
     if (err){
       console.log(err);
       res.json({
@@ -241,18 +241,12 @@ router.route('/member/history')
       return;
     }
 
-    historyUpdate(rows[0].history);
-
+    CompanyName = rows[0].name;
+    one();
   });
-  const historyUpdate = (hs) => {
-    hs = JSON.parse(hs);
-    if( hs !== null){
 
-      hs.push(req.body.company_id);
-    }
-
-    hs = JSON.stringify(hs);
-    pool.query('update saving_okja.usr set favorite_list = ? where id = ?;',[ hs, req.body.id ], function( err, results ) {
+  const one = () => {
+    pool.query('select history from saving_okja.usr where id = ?',[ req.body.id ], function( err, rows ) {
 
       if (err){
         console.log(err);
@@ -263,21 +257,46 @@ router.route('/member/history')
         });
         return;
       }
-      if(results.affectedRows == 1){
-        res.json({
-          result: true,
-          msg: "됬습니다",
-        });
-      }else{
-        res.json({
-          result: false,
-          msg: "update실패",
-        });
 
-      }
+      historyUpdate(rows[0].history);
 
     });
+    const historyUpdate = (hs) => {
+      hs = JSON.parse(hs);
+      if( hs !== null){
+
+        hs.push(req.body.company_id);
+      }
+
+      hs = JSON.stringify(hs);
+      pool.query('update saving_okja.usr set favorite_list = ? where id = ?;',[ hs, req.body.id ], function( err, results ) {
+
+        if (err){
+          console.log(err);
+          res.json({
+            result: false,
+            msg: "db 접속 에러",
+            qry: this.sql
+          });
+          return;
+        }
+        if(results.affectedRows == 1){
+          res.json({
+            result: true,
+            msg: "됬습니다",
+          });
+        }else{
+          res.json({
+            result: false,
+            msg: "update실패",
+          });
+
+        }
+
+      });
+    };
   };
+
 
 })
 .get((req, res)=>{
