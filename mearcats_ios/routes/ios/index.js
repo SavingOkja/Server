@@ -357,22 +357,55 @@ router.route('/matching')
 
       rows = rows[0];
 
-      let arr=[];
+      let UserArray=[];
       for(let i = 0; i<=4; i++)
-        arr.push(rows["value_"+i]);
+        UserArray.push(rows["value_"+i]);
 
       for(let d=6; d<=8; d++)
-        arr.push(rows["value_"+d]);
+        UserArray.push(rows["value_"+d]);
 
-      console.log("arr",arr);
-      let zeroArr = arr.filter((item) => item === 0 );
-      let oneArr = arr.length - zeroArr.length;
-	console.log("newArr.length", zeroArr.length);
-	console.log("array",oneArr);      
-
-
+      console.log("UserArray",UserArray);
 
     });
+    const company = (UserArray)=>{
+      pool.query('select value_0,value_1,value_2,value_3,value_4,value_6,value_7,value_8 from saving_okja.company where id=?',
+      [req.query.user_id], function( err, rows ) {
+
+        if (err){
+          console.log(err);
+          res.json({
+            result: false,
+            msg: "db 접속 에러",
+            qry: this.sql
+          });
+          return;
+        }
+
+        rows = rows[0];
+        let CompanyArr=[];
+        for(let i = 0; i<=4; i++)
+          CompanyArr.push(rows["value_"+i]);
+
+        for(let d=6; d<=8; d++)
+          CompanyArr.push(rows["value_"+d]);
+
+        let score = 0;
+        for(let k=0; k < CompanyArr.length; k++){
+          if(UserArray[i] === CompanyArr[i]){
+            score += 12.5*1;
+          } else {
+            score += 12.5*0.5;
+          }
+        }
+
+        console.log("score 은",score);
+        // console.log("CompanyArr",CompanyArr);
+        // let zeroArr = CompanyArr.filter((item) => item === 0 );
+        // let oneArr = CompanyArr.length - zeroArr.length;
+      	// console.log("newArr.length", zeroArr.length);
+      	// console.log("CompanyArray",oneArr);
+      });
+    };
   };
 
   const COSMETIC = ()=>{//1-6
