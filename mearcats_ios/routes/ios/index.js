@@ -65,7 +65,36 @@ router.route('/member')
       data: rows
     });
   });
-});
+})
+.put((req, res)=>{
+  pool.query('update saving_okja.usr set value_0 = ?,value_1 = ?,value_2=?,value_3=?,value_4=?,value_5=?,value_6=?,value_7=?,value_8=? where id = ?;',
+  [ req.body.value_0, req.body.value_1,req.body.value_2,req.body.value_3,req.body.value_4,req.body.value_5,req.body.value_6,req.body.value_7,req.body.value_8, req.body.id ], function( err, results ) {
+    if (err){
+      console.log(err);
+      res.json({
+        result: false,
+        msg: "db 접속 에러",
+        qry: this.sql
+      });
+      return;
+    }
+
+    if( results.affectedRows > 0){
+      res.status(200).json({
+        result: true,
+        msg: "됬습니다",
+      });
+    }
+    else{
+      res.status(200).json({
+        result: false,
+        msg: "실패",
+      });
+    }
+
+
+  });
+})
 
 router.route('/member/favorite')
 .put((req, res)=>{
