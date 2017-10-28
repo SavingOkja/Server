@@ -18,8 +18,7 @@ router.route('/member')
   let oauth = req.body.facebookToken;
   oauth = crypto.createHash('sha256').update(oauth).digest('base64');
   console.log('hashed: ' , oauth);
-
-  pool.query('insert into saving_okja.usr(facebook_token,img,id) values(?,?,?)',[  req.body.facebookToken,req.body.img, oauth ], function( err, results ) {
+  pool.query('select id from saving_okja.usr where facebook_token = ?;',[ req.body.facebookToken ], function( err, rows ) {
 
     if (err){
     	console.log(err);
@@ -31,21 +30,48 @@ router.route('/member')
       return;
     }
 
-    console.log(results);
-    if( results.affectedRows > 0 ){
+    if(rows.length !== 0) {
       res.status(201).json({
         result: true,
-        msg: "업데이트가 완료되었습니다.",
-	      data: oauth
+        msg: "id입니다",
+        data: rows[0].id
       });
     }else{
-      res.status(201).json({
-        result: false,
-        msg: "업데이트가 실패되었습니다.",
-      });
+      MemberInsert();
     }
-
   });
+  const MemberInsert = () => {
+    pool.query('insert into saving_okja.usr(facebook_token,img,id) values(?,?,?)',[  req.body.facebookToken,req.body.img, oauth ], function( err, results ) {
+
+      if (err){
+        console.log(err);
+        res.json({
+          result: false,
+          msg: "db 접속 에러",
+          qry: this.sql
+        });
+        return;
+      }
+
+      console.log(results);
+      if( results.affectedRows > 0 ){
+        res.status(201).json({
+          result: true,
+          msg: "업데이트가 완료되었습니다.",
+          data: oauth
+        });
+      }else{
+        res.status(201).json({
+          result: false,
+          msg: "업데이트가 실패되었습니다.",
+        });
+      }
+
+    });
+  };
+
+
+
 })
 .get((req, res)=>{
   pool.query('select * from saving_okja.usr where id=?',[req.query.id], function( err, rows ) {
