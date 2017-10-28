@@ -528,7 +528,7 @@ router.route('/matching')
         res.status(200).json({
           result: true,
           msg: "score 입니다.",
-          data: score
+          data: score/20
         });
       });
     };
@@ -588,7 +588,7 @@ router.route('/matching')
         res.status(200).json({
           result: true,
           msg: "score 입니다.",
-          data: score
+          data: score/20
         });
       });
     };
@@ -647,7 +647,7 @@ router.route('/matching')
         res.status(200).json({
           result: true,
           msg: "score 입니다.",
-          data: score
+          data: score/20
         });
       });
 
