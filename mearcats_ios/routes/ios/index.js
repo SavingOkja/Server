@@ -15,19 +15,13 @@ router.route('/member')
           return;
       }
   }
-
-
-  var oauth = req.body.firebaseToken;
+  let oauth = req.body.firebaseToken;
   oauth = crypto.createHash('sha256').update(oauth).digest('base64');
   console.log('hashed: ' , oauth);
 
   pool.query('insert into saving_okja.usr(facebook_token,img,oauth) values(?,?,?)',[  req.body.firebaseToken,req.body.img, oauth ], function( err, results ) {
-    
 
-
-
-
-if (err){
+    if (err){
     	console.log(err);
     	res.json({
         result: false,
@@ -42,9 +36,8 @@ if (err){
       res.status(201).json({
         result: true,
         msg: "업데이트가 완료되었습니다.",
-	        data: oauth
-    
-  });
+	      data: oauth
+      });
     }else{
       res.status(201).json({
         result: false,
@@ -52,12 +45,34 @@ if (err){
       });
     }
 
-
   });
-
 })
 .get((req, res)=>{
 
 });
+
+router.route('/company')
+.get((req, res)=>{
+
+  pool.query('select name from saving_okja.company";',[  req.query.name ], function( err, rows ) {
+
+    if (err){
+      console.log(err);
+      res.json({
+        result: false,
+        msg: "db 접속 에러",
+        qry: this.sql
+      });
+      return;
+    }
+
+    res.status(200).json({
+      result: true,
+      msg: "company 들입니다.",
+      data: rows[0]
+    });
+  };
+});
+
 
 module.exports = router;
