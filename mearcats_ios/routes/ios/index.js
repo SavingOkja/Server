@@ -51,28 +51,47 @@ router.route('/member')
 
 });
 
-router.route('/company')
+router.route('/company/:id')
 .get((req, res)=>{
 
-  pool.query('select name from saving_okja.company',[  req.query.name ], function( err, rows ) {
+  if( req.params.id ){
+    pool.query('select * from saving_okja.company where id=?',[req.params.id], function( err, rows ) {
 
-    if (err){
-      console.log(err);
-      res.json({
-        result: false,
-        msg: "db 접속 에러",
-        qry: this.sql
+      if (err){
+        console.log(err);
+        res.json({
+          result: false,
+          msg: "db 접속 에러",
+          qry: this.sql
+        });
+        return;
+      }
+
+      res.status(200).json({
+        result: true,
+        msg: "product 들입니다.",
+        data: rows
       });
-      return;
-    }
-
-    res.status(200).json({
-      result: true,
-      msg: "company 들입니다.",
-      data: rows
     });
-  });
+  }else{
+    pool.query('select name,id from saving_okja.company', function( err, rows ) {
+
+      if (err){
+        console.log(err);
+        res.json({
+          result: false,
+          msg: "db 접속 에러",
+          qry: this.sql
+        });
+        return;
+      }
+
+      res.status(200).json({
+        result: true,
+        msg: "company 들입니다.",
+        data: rows
+      });
+    });
+  }
 });
-
-
 module.exports = router;
