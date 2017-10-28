@@ -169,15 +169,16 @@ router.route('/member/history')
       });
       return;
     }
-    console.log(rows[0].history);
-    historyUpdate(rows[0].history);
-  });
 
+    historyUpdate(rows[0].history);
+
+  });
   const historyUpdate = (hs) => {
-    console.log(typeof hs);
     hs = JSON.parse(hs);
-    console.log(typeof hs);
-    hs.push(req.body.company_id);
+    if( hs !== null){
+
+      hs.push(req.body.company_id);
+    }
 
     hs = JSON.stringify(hs);
     pool.query('update saving_okja.usr set favorite_list = ? where id = ?;',[ hs, req.body.id ], function( err, results ) {
