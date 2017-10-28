@@ -1,5 +1,7 @@
 
 
+config/
+
 # Logs
 logs
 *.log
