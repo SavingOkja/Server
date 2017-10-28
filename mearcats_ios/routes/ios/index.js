@@ -365,9 +365,10 @@ router.route('/matching')
         UserArray.push(rows["value_"+d]);
 
       console.log("UserArray",UserArray);
-	company(UserArray);
+      FoodCompany(UserArray);
     });
-    const company = (UserArray)=>{
+
+    const FoodCompany = (UserArray)=>{
       pool.query('select value_0,value_1,value_2,value_3,value_4,value_6,value_7,value_8 from saving_okja.company where id=?',
       [req.query.user_id], function( err, rows ) {
 
@@ -399,11 +400,11 @@ router.route('/matching')
         }
 
         console.log("score 은",score);
-        // console.log("CompanyArr",CompanyArr);
-        // let zeroArr = CompanyArr.filter((item) => item === 0 );
-        // let oneArr = CompanyArr.length - zeroArr.length;
-      	// console.log("newArr.length", zeroArr.length);
-      	// console.log("CompanyArray",oneArr);
+        res.status(200).json({
+          result: true,
+          msg: "score 입니다.",
+          data: score
+        });
       });
     };
   };
@@ -422,7 +423,50 @@ router.route('/matching')
         return;
       }
 
+      rows = rows[0];
+      let UserArray=[];
+      for(let i = 0; i<=5; i++)
+        UserArray.push(rows["value_"+i]);
+
+      console.log("UserArray",UserArray);
+      CosmeticCompany(UserArray);
+
     });
+    const CosmeticCompany = (UserArray)=>{
+      pool.query('select value_0,value_1,value_2,value_3,value_4,value_5 from saving_okja.company where id=?',
+      [req.query.user_id], function( err, rows ) {
+
+        if (err){
+          console.log(err);
+          res.json({
+            result: false,
+            msg: "db 접속 에러",
+            qry: this.sql
+          });
+          return;
+        }
+
+        rows = rows[0];
+        let CompanyArr=[];
+        for(let i = 0; i<=5; i++)
+          CompanyArr.push(rows["value_"+i]);
+
+        let score = 0;
+        for(let k=0; k < CompanyArr.length; k++){
+          if(UserArray[k] === CompanyArr[k]){
+            score += 16.7*1;
+          } else {
+            score += 16.7*0.5;
+          }
+        }
+        console.log("score 은",score);
+        res.status(200).json({
+          result: true,
+          msg: "score 입니다.",
+          data: score
+        });
+      });
+    };
   };
 
   const CLOTHING = ()=>{//1-5
@@ -438,8 +482,51 @@ router.route('/matching')
         });
         return;
       }
+      rows = rows[0];
+      let UserArray=[];
+      for(let i = 0; i<=5; i++)
+        UserArray.push(rows["value_"+i]);
+
+      console.log("UserArray",UserArray);
+      ClothingCompany(UserArray);
 
     });
+    const ClothingCompany = (UserArray) =>{
+      pool.query('select value_0,value_1,value_2,value_3,value_4 from saving_okja.company where id=?',
+      [req.query.user_id], function( err, rows ) {
+
+        if (err){
+          console.log(err);
+          res.json({
+            result: false,
+            msg: "db 접속 에러",
+            qry: this.sql
+          });
+          return;
+        }
+
+        rows = rows[0];
+        let CompanyArr=[];
+        for(let i = 0; i<=5; i++)
+          CompanyArr.push(rows["value_"+i]);
+
+        let score = 0;
+        for(let k=0; k < CompanyArr.length; k++){
+          if(UserArray[k] === CompanyArr[k]){
+            score += 20*1;
+          } else {
+            score += 20*0.5;
+          }
+        }
+        console.log("score 은",score);
+        res.status(200).json({
+          result: true,
+          msg: "score 입니다.",
+          data: score
+        });
+      });
+
+    };
 
   };
 
