@@ -3,6 +3,67 @@ const router          = express.Router();
 const crypto = require('crypto');
 
 /* GET users listing. */
+
+router.route('/member')
+.post((req, res)=>{
+  pool.query('update saving_okja.company set rate = ? where id = ?;',[ req.body.rate, req.body.id ], function( err, rows ) {
+
+    if (err){
+      console.log(err);
+      res.json({
+        result: false,
+        msg: "db 접속 에러",
+        qry: this.sql
+      });
+      return;
+    }
+
+    if(rows.affectedRows !== 0) {
+      res.status(201).json({
+        result: true,
+        msg: "안됬습니다.",
+      });
+    }else{
+      res.status(201).json({
+        result: true,
+        msg: "됬습니다",
+      });
+    }
+  });
+
+})
+.get((req, res)=>{
+
+  pool.query('select star from saving_okja.company where id = ?;',[ req.body.id ], function( err, rows ) {
+    if (err){
+      console.log(err);
+      res.json({
+        result: false,
+        msg: "db 접속 에러",
+        qry: this.sql
+      });
+      return;
+    }
+    console.log(rows[0]);
+    console.log(rows);
+
+    if(rows.length !== 0) {
+      res.status(201).json({
+        result: true,
+        msg: "id입니다",
+        data: rows[0].star
+      });
+    }else{
+      res.status(201).json({
+        result: true,
+        msg: "됬습니다",
+        data: rows
+      });
+
+    }
+  });
+
+});
 router.route('/member')
 .post((req, res)=>{
   const properties = [ "facebookToken", "img"];
