@@ -18,7 +18,7 @@ global.pool = mysql.createPool({
     connectionLimit : db_config.connectionLimit
 });
 
-let LeftConnections = connectionLimit;
+let LeftConnections = db_config.connectionLimit;
 pool.on('acquire', function (connection) {
     LeftConnections--;
     if( LeftConnections < 5 ){
@@ -43,7 +43,7 @@ pool.getConnection(function(err, connection) {
 
     connection.ping(function (err) {
         if (err) throw err;
-        console.log('Server responded to ping');
+        console.log('db responded to ping');
     });
 });
 
