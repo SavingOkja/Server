@@ -66,6 +66,71 @@ router.route('/member')
     });
   });
 });
+router.route('/member/favorite')
+.put((req, res)=>{
+
+
+  pool.query('select favorite from saving_okja.usr where id = ?',[ req.body.user_id ], function( err, rows ) {
+
+    if (err){
+    	console.log(err);
+    	res.json({
+        result: false,
+        msg: "db 접속 에러",
+        qry: this.sql
+      });
+      return;
+    }
+
+    console.log(rows[0]);
+    update(rows[0]);
+
+  });
+
+  const update = (fv) => {
+    fv.push(req.body.company_id);
+
+    console.log(fv);
+    console.log(typeof fv);
+
+    pool.query('update saving_okja.usr set alarm_array = ? where singer_id = ?;',[ fv ], function( err, results ) {
+
+      if (err){
+        console.log(err);
+        res.json({
+          result: false,
+          msg: "db 접속 에러",
+          qry: this.sql
+        });
+        return;
+      }
+
+      if(results.affectedRows == 1){
+        res.json({
+          result: true,
+          msg: "됬습니다",
+        });
+      }else{
+        res.json({
+          result: false,
+          msg: "update실패",
+        });
+
+      }
+
+    });
+  };
+
+
+});
+
+router.route('/member/history')
+.post((req, res)=>{
+
+
+});
+
+
 
 router.route('/company')
 .get((req, res)=>{
