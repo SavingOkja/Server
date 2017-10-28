@@ -90,10 +90,11 @@ router.route('/member/favorite')
   });
 
   const favoriteUpdate = (fv) => {
-  	console.log(typeof fv);
-  	fv = JSON.parse(fv);
-  	console.log(typeof fv);
+    fv = JSON.parse(fv);
+    if( fv !== null){
       fv.push(req.body.company_id);
+    }
+
 
     let ar = JSON.stringify(fv);
     pool.query('update saving_okja.usr set favorite_list = ? where id = ?;',[ ar, req.body.user_id ], function( err, results ) {
