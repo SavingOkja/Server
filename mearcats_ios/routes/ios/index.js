@@ -702,17 +702,32 @@ let json =
     "company": "Origins"
   }
 ];
+console.log(json[0].company);
 router.route('/input')
 .post((req, res)=>{
-  pool.query('insert into saving_okja.company (name,value_0,value_1,value_2,value_3,value_4) values(?,?,?,?,?,?,2)',
-  [ json[0].name,json[0]["1"],json[0]["2"],json[0]["3"],json[0]["4"],json[0]["5"] ],function( err, results ){
+for(let i =0 ; i<json.length; i++){
+  pool.query('insert into saving_okja.company (name,value_0,value_1,value_2,value_3,value_4,value_5,kinds) values(?,?,?,?,?,?,?,2)',
+  [ json[i].company,json[i]["1"],json[i]["2"],json[i]["3"],json[i]["4"],json[i]["5"],json[i]["6"] ],function( err, results ){
 
-    if(results.affectedRows >0){
+if (err){
+        console.log(err);
+        res.json({
+        result: false,
+        msg: "db 접속 에러",
+        qry: this.sql
+      });
+      return;
+    }
+
+console.log(results);
+    if(results){
+console.log(results);
       console.log("1");
     }else{
       console.log("0");
     }
   });
+}
 });
 
 /* GET users listing. */
