@@ -51,11 +51,11 @@ router.route('/member')
 
 });
 
-router.route('/company/:id')
+router.route('/company')
 .get((req, res)=>{
 
-  if( req.params.id ){
-    pool.query('select * from saving_okja.company where id=?',[req.params.id], function( err, rows ) {
+  if( req.query.id ){
+    pool.query('select * from saving_okja.company where id=?',[req.query.id], function( err, rows ) {
 
       if (err){
         console.log(err);
