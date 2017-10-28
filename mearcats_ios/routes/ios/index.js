@@ -365,7 +365,7 @@ router.route('/matching')
         UserArray.push(rows["value_"+d]);
 
       console.log("UserArray",UserArray);
-
+	company(UserArray);
     });
     const company = (UserArray)=>{
       pool.query('select value_0,value_1,value_2,value_3,value_4,value_6,value_7,value_8 from saving_okja.company where id=?',
@@ -391,7 +391,7 @@ router.route('/matching')
 
         let score = 0;
         for(let k=0; k < CompanyArr.length; k++){
-          if(UserArray[i] === CompanyArr[i]){
+          if(UserArray[k] === CompanyArr[k]){
             score += 12.5*1;
           } else {
             score += 12.5*0.5;
