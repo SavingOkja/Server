@@ -94,7 +94,7 @@ router.route('/member')
 
 
   });
-})
+});
 
 router.route('/member/favorite')
 .put((req, res)=>{
@@ -314,4 +314,104 @@ router.route('/company')
     });
   }
 });
+
+router.route('/matching')
+.get((req, res)=>{
+
+  pool.query('select kinds from saving_okja.company where id=?',
+  [req.query.company_id], function( err, rows ) {
+
+    if (err){
+      console.log(err);
+      res.json({
+        result: false,
+        msg: "db 접속 에러",
+        qry: this.sql
+      });
+      return;
+    }
+
+    if( rows[0].kinds === 0 ){
+      FOOD();
+    }else if (rows[0].kinds === 1) {
+      COSMETIC();
+    }else if (rows[0].kinds === 2) {
+      CLOTHING();
+    }
+
+  });
+
+  const FOOD = ()=>{//1-5,7-9
+    pool.query('select value_0,value_1,value_2,value_3,value_4,value_6,value_7,value_8 from saving_okja.usr where id=?',
+    [req.query.user_id], function( err, rows ) {
+
+      if (err){
+        console.log(err);
+        res.json({
+          result: false,
+          msg: "db 접속 에러",
+          qry: this.sql
+        });
+        return;
+      }
+
+      rows = rows[0];
+
+      let arr=[];
+      for(let i = 0; i<=4; i++)
+        arr.push(rows["value_"+i]);
+
+      for(let d=6; d<=8; d++)
+        arr.push(rows["value_"+d]);
+
+      console.log("arr",arr);
+      let newArr = arr.filter((item) => item === 0 );
+      console.log("newArr.length",newArr.length);
+      console.log("newArr",newArr);
+
+
+    });
+  };
+
+  const COSMETIC = ()=>{//1-6
+    pool.query('select value_0,value_1,value_2,value_3,value_4,value_5 from saving_okja.usr where id=?',
+    [req.query.user_id], function( err, rows ) {
+
+      if (err){
+        console.log(err);
+        res.json({
+          result: false,
+          msg: "db 접속 에러",
+          qry: this.sql
+        });
+        return;
+      }
+
+    });
+  };
+
+  const CLOTHING = ()=>{//1-5
+    pool.query('select value_0,value_1,value_2,value_3,value_4 from saving_okja.usr where id=?',
+    [req.query.user_id], function( err, rows ) {
+
+      if (err){
+        console.log(err);
+        res.json({
+          result: false,
+          msg: "db 접속 에러",
+          qry: this.sql
+        });
+        return;
+      }
+
+    });
+
+  };
+
+
+});
+
+
+
+
 module.exports = router;
