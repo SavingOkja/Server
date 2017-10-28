@@ -70,7 +70,7 @@ router.route('/member/favorite')
 .put((req, res)=>{
 
 
-  pool.query('select favorite from saving_okja.usr where id = ?',[ req.body.user_id ], function( err, rows ) {
+  pool.query('select favorite_list from saving_okja.usr where id = ?',[ req.body.user_id ], function( err, rows ) {
 
     if (err){
     	console.log(err);
@@ -81,19 +81,21 @@ router.route('/member/favorite')
       });
       return;
     }
+	
+	
+    console.log(rows[0].favorite_list);
 
-    console.log(rows[0]);
-    update(rows[0]);
-
+	update(rows[0].favorite_list);
   });
 
   const update = (fv) => {
+	console.log(typeof fv);
+	fv = JSON.parse(fv);
+	console.log(typeof fv);
     fv.push(req.body.company_id);
-
-    console.log(fv);
-    console.log(typeof fv);
-
-    pool.query('update saving_okja.usr set alarm_array = ? where singer_id = ?;',[ fv ], function( err, results ) {
+	
+let ar = JSON.stringify(fv);
+    pool.query('update saving_okja.usr set favorite_list = ? where id = ?;',[ ar, req.body.user_id ], function( err, results ) {
 
       if (err){
         console.log(err);
