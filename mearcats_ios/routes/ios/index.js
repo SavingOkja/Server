@@ -1,6 +1,6 @@
 const express = require('express');
 const router          = express.Router();
-
+const crypto = require('crypto');
 
 /* GET users listing. */
 router.route('/member')
@@ -15,8 +15,19 @@ router.route('/member')
           return;
       }
   }
-  pool.query('insert into saving_okja.usr(facebook_token,img) values(?,?)',[  req.body.firebaseToken,req.body.img ], function( err, results ) {
-    if (err){
+
+
+  var oauth = req.body.firebaseToken;
+  oauth = crypto.createHash('sha256').update(oauth).digest('base64');
+  console.log('hashed: ' , oauth);
+
+  pool.query('insert into saving_okja.usr(facebook_token,img,oauth) values(?,?,?)',[  req.body.firebaseToken,req.body.img, oauth ], function( err, results ) {
+    
+
+
+
+
+if (err){
     	console.log(err);
     	res.json({
         result: false,
@@ -31,7 +42,9 @@ router.route('/member')
       res.status(201).json({
         result: true,
         msg: "업데이트가 완료되었습니다.",
-      });
+	        data: oauth
+    
+  });
     }else{
       res.status(201).json({
         result: false,
