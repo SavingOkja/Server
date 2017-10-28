@@ -155,8 +155,6 @@ let ar = JSON.stringify(fv);
   });
 });
 
-;
-
 router.route('/member/history')
 .post((req, res)=>{
 
