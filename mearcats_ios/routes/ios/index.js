@@ -855,10 +855,8 @@ router.route('/member')
 
 router.route('/member/favorite')
 .put((req, res)=>{
-
-
-  pool.query('select favorite_list from saving_okja.usr where id = ?',[ req.body.user_id ], function( err, rows ) {
-
+  let CompanyName;
+  pool.query('select name from saving_okja.company where id = ?',[ req.body.company_id ], function( err, rows ) {
     if (err){
     	console.log(err);
     	res.json({
@@ -869,21 +867,11 @@ router.route('/member/favorite')
       return;
     }
 
-
-    console.log(rows[0].favorite_list);
-
-    favoriteUpdate(rows[0].favorite_list);
+    CompanyName = rows[0].name;
+    two();
   });
-
-  const favoriteUpdate = (fv) => {
-    fv = JSON.parse(fv);
-    if( fv !== null){
-      fv.push(req.body.company_id);
-    }
-
-
-    let ar = JSON.stringify(fv);
-    pool.query('update saving_okja.usr set favorite_list = ? where id = ?;',[ ar, req.body.user_id ], function( err, results ) {
+  const two = () =>{
+    pool.query('select favorite_list from saving_okja.usr where id = ?',[ req.body.user_id ], function( err, rows ) {
 
       if (err){
         console.log(err);
@@ -895,21 +883,48 @@ router.route('/member/favorite')
         return;
       }
 
-      if(results.affectedRows == 1){
-        res.json({
-          result: true,
-          msg: "됬습니다",
-        });
-      }else{
-        res.json({
-          result: false,
-          msg: "update실패",
-        });
 
-      }
+      console.log(rows[0].favorite_list);
 
+      favoriteUpdate(rows[0].favorite_list);
     });
+
+    const favoriteUpdate = (fv) => {
+      fv = JSON.parse(fv);
+      if( fv !== null){
+        fv.CompanyName = req.body.company_id;
+      }
+      let ar = JSON.stringify(fv);
+      pool.query('update saving_okja.usr set favorite_list = ? where id = ?;',[ ar, req.body.user_id ], function( err, results ) {
+
+        if (err){
+          console.log(err);
+          res.json({
+            result: false,
+            msg: "db 접속 에러",
+            qry: this.sql
+          });
+          return;
+        }
+
+        if(results.affectedRows == 1){
+          res.json({
+            result: true,
+            msg: "됬습니다",
+          });
+        }else{
+          res.json({
+            result: false,
+            msg: "update실패",
+          });
+
+        }
+
+      });
+    };
   };
+
+
 
 
 })
