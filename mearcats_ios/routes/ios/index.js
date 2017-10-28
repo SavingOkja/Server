@@ -5,7 +5,7 @@ const crypto = require('crypto');
 /* GET users listing. */
 router.route('/member')
 .post((req, res)=>{
-  const properties = [ "firebaseToken", "img"];
+  const properties = [ "facebookToken", "img"];
   for(var i=0; i< properties.length;i++){
       if(!req.body.hasOwnProperty(properties[i])){
           res.json({
@@ -15,11 +15,11 @@ router.route('/member')
           return;
       }
   }
-  let oauth = req.body.firebaseToken;
+  let oauth = req.body.facebookToken;
   oauth = crypto.createHash('sha256').update(oauth).digest('base64');
   console.log('hashed: ' , oauth);
 
-  pool.query('insert into saving_okja.usr(facebook_token,img,oauth) values(?,?,?)',[  req.body.firebaseToken,req.body.img, oauth ], function( err, results ) {
+  pool.query('insert into saving_okja.usr(facebook_token,img,id) values(?,?,?)',[  req.body.facebookToken,req.body.img, oauth ], function( err, results ) {
 
     if (err){
     	console.log(err);
