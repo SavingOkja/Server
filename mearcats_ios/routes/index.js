@@ -1,5 +1,6 @@
 const express     = require('express');
-const Router      = new express.Router();
+const router          = express.Router();
+
 
 /**********************
         MySQL 연동
@@ -47,8 +48,9 @@ pool.getConnection(function(err, connection) {
     });
 });
 
+console.log("1");
 
 const ios = require('./ios');
-Router.use('/ios', ios);
+router.use('/ios', ios);
 
-module.exports = exports = Router;
+module.exports = router;
